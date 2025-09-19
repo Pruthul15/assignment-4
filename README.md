@@ -1,264 +1,124 @@
-# 📦 Project Setup
+# Professional Calculator REPL – Assignment 4
+
+A Python-based calculator application featuring an interactive REPL (Read-Eval-Print Loop), modular design, 100% test coverage, and CI/CD integration via GitHub Actions.
 
 ---
 
-# 🧩 1. Install Homebrew (Mac Only)
+## 🚀 Features
 
-> Skip this step if you're on Windows.
-
-Homebrew is a package manager for macOS.  
-You’ll use it to easily install Git, Python, Docker, etc.
-
-**Install Homebrew:**
-
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-**Verify Homebrew:**
-
-```bash
-brew --version
-```
-
-If you see a version number, you're good to go.
+- **Interactive REPL Interface** – user-friendly command-line calculator  
+- **Supported Operations** – addition, subtraction, multiplication, division, power (exponentiation)  
+- **Calculation History** – view all past calculations in session  
+- **Error Handling** – input validation, division by zero checks, clear error messages  
+- **Special Commands** – `help`, `history`, `exit`  
+- **100% Test Coverage** – enforced via CI/CD pipeline  
+- **Clean Architecture** – factory pattern, abstract base classes, modular code  
 
 ---
 
-# 🧩 2. Install and Configure Git
+## 📁 Project Structure
 
-## Install Git
+assignment4/
+├── .github/
+│ └── workflows/ # GitHub Actions CI config
+├── app/
+│ ├── calculation/ # Calculation classes and factory
+│ │ ├── init.py
+│ │ └── pycache/
+│ ├── calculator/ # REPL calculator interface
+│ │ ├── init.py
+│ │ └── pycache/
+│ └── operation/ # Mathematical operations
+│ ├── init.py
+│ └── pycache/
+├── htmlcov/ # Coverage HTML report (auto-generated)
+├── tests/ # pytest test suite
+│ ├── init.py
+│ ├── conftest.py
+│ ├── test_calculation.py
+│ ├── test_calculator.py
+│ ├── test_operations.py
+│ └── pycache/
+├── venv/ # Virtual environment (not tracked in Git usually)
+├── .coverage # Coverage data file
+├── .coveragerc # Coverage configuration
+├── .gitignore # Git ignore rules
+├── LICENSE # License file
+├── README.md # Project documentation
+├── pytest.ini # pytest configuration
+├── requirements.txt # Dependencies
+├── unit_content_draft.md # Draft notes
+└── main.py # Application entry point
 
-- **MacOS (using Homebrew)**
 
-```bash
-brew install git
-```
-
-- **Windows**
-
-Download and install [Git for Windows](https://git-scm.com/download/win).  
-Accept the default options during installation.
-
-**Verify Git:**
-
-```bash
-git --version
-```
-
----
-
-## Configure Git Globals
-
-Set your name and email so Git tracks your commits properly:
-
-```bash
-git config --global user.name "Your Name"
-git config --global user.email "your_email@example.com"
-```
-
-Confirm the settings:
-
-```bash
-git config --list
-```
 
 ---
 
-## Generate SSH Keys and Connect to GitHub
+## 🛠 Installation & Setup
 
-> Only do this once per machine.
+### Prerequisites
+- Python 3.8+  
+- pip  
+- Git  
 
-1. Generate a new SSH key:
-
+### Steps
 ```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
-```
+# clone repo
+git clone https://github.com/Pruthul15/assignment-4.git
+cd assignment4
 
-(Press Enter at all prompts.)
+# create venv
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
 
-2. Start the SSH agent:
-
-```bash
-eval "$(ssh-agent -s)"
-```
-
-3. Add the SSH private key to the agent:
-
-```bash
-ssh-add ~/.ssh/id_ed25519
-```
-
-4. Copy your SSH public key:
-
-- **Mac/Linux:**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | pbcopy
-```
-
-- **Windows (Git Bash):**
-
-```bash
-cat ~/.ssh/id_ed25519.pub | clip
-```
-
-5. Add the key to your GitHub account:
-   - Go to [GitHub SSH Settings](https://github.com/settings/keys)
-   - Click **New SSH Key**, paste the key, save.
-
-6. Test the connection:
-
-```bash
-ssh -T git@github.com
-```
-
-You should see a success message.
-
----
-
-# 🧩 3. Clone the Repository
-
-Now you can safely clone the course project:
-
-```bash
-git clone <repository-url>
-cd <repository-directory>
-```
-
----
-
-# 🛠️ 4. Install Python 3.10+
-
-## Install Python
-
-- **MacOS (Homebrew)**
-
-```bash
-brew install python
-```
-
-- **Windows**
-
-Download and install [Python for Windows](https://www.python.org/downloads/).  
-✅ Make sure you **check the box** `Add Python to PATH` during setup.
-
-**Verify Python:**
-
-```bash
-python3 --version
-```
-or
-```bash
-python --version
-```
-
----
-
-## Create and Activate a Virtual Environment
-
-(Optional but recommended)
-
-```bash
-python3 -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate.bat  # Windows
-```
-
-### Install Required Packages
-
-```bash
+# install deps
 pip install -r requirements.txt
-```
 
----
 
-# 🐳 5. (Optional) Docker Setup
+Welcome to the Professional Calculator REPL!
+Type 'help' for instructions or 'exit' to quit.
 
-> Skip if Docker isn't used in this module.
+>> add 3 4
+Result: AddCalculation: 3.0 Add 4.0 = 7.0
 
-## Install Docker
+>> power 4 2
+Result: PowerCalculation: 4.0 Power 2.0 = 16.0
 
-- [Install Docker Desktop for Mac](https://www.docker.com/products/docker-desktop/)
-- [Install Docker Desktop for Windows](https://www.docker.com/products/docker-desktop/)
+>> power 4 -2
+Result: PowerCalculation: 4.0 Power -2.0 = 0.0625
 
-## Build Docker Image
+>> power -4 2
+Result: PowerCalculation: -4.0 Power 2.0 = 16.0
 
-```bash
-docker build -t <image-name> .
-```
+>> power -4 -3
+Result: PowerCalculation: -4.0 Power -3.0 = -0.015625
 
-## Run Docker Container
+>> history
+Calculation History:
+1. AddCalculation: 3.0 Add 4.0 = 7.0
+2. PowerCalculation: 4.0 Power 2.0 = 16.0
+3. PowerCalculation: 4.0 Power -2.0 = 0.0625
+4. PowerCalculation: -4.0 Power 2.0 = 16.0
+5. PowerCalculation: -4.0 Power -3.0 = -0.015625
 
-```bash
-docker run -it --rm <image-name>
-```
+>> help
+Available Commands:
+- add <a> <b>: Addition
+- subtract <a> <b>: Subtraction
+- multiply <a> <b>: Multiplication
+- divide <a> <b>: Division
+- history: Show calculation history
+- help: Show this help message
+- exit: Exit the calculator
 
----
+>> exit
+Exiting calculator. Goodbye!
 
-# 🚀 6. Running the Project
 
-- **Without Docker**:
+Testing:
+pytest
 
-```bash
-python main.py
-```
-
-(or update this if the main script is different.)
-
-- **With Docker**:
-
-```bash
-docker run -it --rm <image-name>
-```
-
----
-
-# 📝 7. Submission Instructions
-
-After finishing your work:
-
-```bash
-git add .
-git commit -m "Complete Module X"
-git push origin main
-```
-
-Then submit the GitHub repository link as instructed.
-
----
-
-# 🔥 Useful Commands Cheat Sheet
-
-| Action                         | Command                                          |
-| ------------------------------- | ------------------------------------------------ |
-| Install Homebrew (Mac)          | `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"` |
-| Install Git                     | `brew install git` or Git for Windows installer |
-| Configure Git Global Username  | `git config --global user.name "Your Name"`      |
-| Configure Git Global Email     | `git config --global user.email "you@example.com"` |
-| Clone Repository                | `git clone <repo-url>`                          |
-| Create Virtual Environment     | `python3 -m venv venv`                           |
-| Activate Virtual Environment   | `source venv/bin/activate` / `venv\Scripts\activate.bat` |
-| Install Python Packages        | `pip install -r requirements.txt`               |
-| Build Docker Image              | `docker build -t <image-name> .`                |
-| Run Docker Container            | `docker run -it --rm <image-name>`               |
-| Push Code to GitHub             | `git add . && git commit -m "message" && git push` |
-
----
-
-# 📋 Notes
-
-- Install **Homebrew** first on Mac.
-- Install and configure **Git** and **SSH** before cloning.
-- Use **Python 3.10+** and **virtual environments** for Python projects.
-- **Docker** is optional depending on the project.
-
----
-
-# 📎 Quick Links
-
-- [Homebrew](https://brew.sh/)
-- [Git Downloads](https://git-scm.com/downloads)
-- [Python Downloads](https://www.python.org/downloads/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [GitHub SSH Setup Guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh)
+Run with coverage:
+pytest --cov=app tests/
+coverage report --fail-under=100
+coverage html
