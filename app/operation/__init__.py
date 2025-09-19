@@ -1,3 +1,4 @@
+
 # operations.py
 
 class Operation:
@@ -132,4 +133,26 @@ class Operation:
             raise ValueError("Division by zero is not allowed.")  # Raises an error if division by zero is attempted.
         return a / b  # Divides `a` by `b` and returns the quotient.
 
-    
+     # ADDED: Power operation for exponentiation functionality
+    @staticmethod
+    def power(a: float, b: float) -> float:
+        """
+        Raises the first floating-point number to the power of the second and returns the result.
+
+        **Parameters:**
+        - `a (float)`: The base number.
+        - `b (float)`: The exponent.
+        
+        **Returns:**
+        - `float`: The result of `a` raised to the power of `b`.
+
+        **Example:**
+        >>> Operation.power(2.0, 3.0)
+        8.0
+
+        **Mathematical Operation:**
+        - This method performs exponentiation, calculating a^b using Python's ** operator.
+        - Exponentiation is a fundamental mathematical operation that extends multiplication
+          for cases where we need to multiply a number by itself multiple times.
+        """
+        return a ** b  # Raises `a` to the power of `b` and returns the result.
