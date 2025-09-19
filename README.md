@@ -1,5 +1,5 @@
 # Professional Calculator REPL – Assignment 4
-# Professional Calculator REPL - Assignment 4
+
 
 ![CI](https://github.com/Pruthul15/assignment-4/actions/workflows/python-app.yml/badge.svg)
 
@@ -112,10 +112,11 @@ Available Commands:
 - subtract <a> <b>: Subtraction
 - multiply <a> <b>: Multiplication
 - divide <a> <b>: Division
+- power <a> <b>` - Exponentiation (a^b)
+- power 
 - history: Show calculation history
 - help: Show this help message
 - exit: Exit the calculator
-
 >> exit
 Exiting calculator. Goodbye!
 
