@@ -1,4 +1,9 @@
 # Professional Calculator REPL – Assignment 4
+# Professional Calculator REPL - Assignment 4
+
+![CI](https://github.com/Pruthul15/assignment-4/actions/workflows/python-app.yml/badge.svg)
+
+A comprehensive calculator application built with Python featuring a command-line REPL interface, robust testing, and professional software development practices.
 
 A Python-based calculator application featuring an interactive REPL (Read-Eval-Print Loop), modular design, 100% test coverage, and CI/CD integration via GitHub Actions.
 
