@@ -246,15 +246,18 @@ class DivideCalculation(Calculation):
         # Calls the division method from the Operation module to perform the division.
         return Operation.division(self.a, self.b)
 
-# @CalculationFactory.register_calculation('power')
-# class PowerCalculation(Calculation):
-#     """
-#     MultiplyCalculation represents a multiplication operation.
+# ADDED: PowerCalculation class for exponentiation functionality  
+@CalculationFactory.register_calculation('power')
+class PowerCalculation(Calculation):
+    """
+    PowerCalculation represents an exponentiation operation between two numbers.
     
-#     By encapsulating the multiplication logic here, we achieve a clear separation of 
-#     concerns, making it easy to adjust the multiplication logic without affecting other calculations.
-#     """
+    **Mathematical Operation**: This class performs exponentiation, calculating 
+    a^b where 'a' is the base and 'b' is the exponent. Exponentiation is a 
+    fundamental mathematical operation that extends multiplication for cases 
+    where we need to multiply a number by itself multiple times.
+    """
 
-#     def execute(self) -> float:
-#         # Calls the multiplication method from the Operation module to perform the multiplication.
-#         return Operation.power(self.a, self.b) # pragma: no cover
+    def execute(self) -> float:
+        # Calls the power method from the Operation module to perform the exponentiation.
+        return Operation.power(self.a, self.b)
