@@ -10,7 +10,6 @@ the factory creates appropriate instances, and error handling behaves as expecte
 Tests are organized following the AAA (Arrange, Act, Assert) pattern and adhere
 to PEP8 standards for code style and formatting.
 """
-
 import pytest
 from unittest.mock import patch
 from app.operation import Operation
@@ -20,9 +19,11 @@ from app.calculation import (
     SubtractCalculation,
     MultiplyCalculation,
     DivideCalculation,
+    PowerCalculation,  # ADDED: PowerCalculation import for power operation functionality
     Calculation
 )
-
+# Ensure all calculation classes are loaded and registered
+from app.calculation import PowerCalculation  # This forces the decorator to execute
 
 # -----------------------------------------------------------------------------------
 # Test Concrete Calculation Classes
@@ -226,6 +227,52 @@ def test_divide_calculation_execute_division_by_zero():
 
     # Verify the exception message is as expected
     assert str(exc_info.value) == "Cannot divide by zero."
+    
+    # ADDED: PowerCalculation tests for exponentiation functionality
+@patch.object(Operation, 'power')
+def test_power_calculation_execute_positive(mock_power):
+    """
+    Test the execute method of PowerCalculation for a positive scenario.
+
+    This test verifies that the PowerCalculation class correctly calls the power
+    method of the Operation class with the provided operands and returns the expected result.
+    """
+    # Arrange
+    a = 2.0
+    b = 3.0
+    expected_result = 8.0
+    mock_power.return_value = expected_result
+    power_calc = PowerCalculation(a, b)
+
+    # Act
+    result = power_calc.execute()
+
+    # Assert
+    mock_power.assert_called_once_with(a, b)
+    assert result == expected_result
+
+
+@patch.object(Operation, 'power')
+def test_power_calculation_execute_negative(mock_power):
+    """
+    Test the execute method of PowerCalculation for a negative scenario.
+
+    This test ensures that if the Operation.power method raises an exception,
+    the PowerCalculation.execute method propagates it correctly.
+    """
+    # Arrange
+    a = 2.0
+    b = 3.0
+    mock_power.side_effect = Exception("Power error")
+    power_calc = PowerCalculation(a, b)
+
+    # Act & Assert
+    with pytest.raises(Exception) as exc_info:
+        power_calc.execute()
+
+    # Verify that the exception message is as expected
+    assert str(exc_info.value) == "Power error"
+
 
 
 # -----------------------------------------------------------------------------------
@@ -310,7 +357,22 @@ def test_factory_creates_divide_calculation():
     assert isinstance(calc, DivideCalculation)
     assert calc.a == a
     assert calc.b == b
-
+    
+    # ADDED: Factory test for PowerCalculation creation
+def test_factory_creates_power_calculation():
+    """Test that the CalculationFactory creates a PowerCalculation instance."""
+    
+    # Arrange
+    a = 2.0
+    b = 3.0
+    
+    # Act
+    calc = CalculationFactory.create_calculation('power', a, b)
+    
+    # Assert
+    assert isinstance(calc, PowerCalculation)
+    assert calc.a == a
+    assert calc.b == b
 
 def test_factory_create_unsupported_calculation():
     """
@@ -377,6 +439,8 @@ def test_calculation_str_representation_addition(mock_addition):
     # Expected string should reflect the operation name derived from the class name ('Add')
     expected_str = f"{add_calc.__class__.__name__}: {a} Add {b} = 15.0"
     assert calc_str == expected_str
+
+
 
 
 @patch.object(Operation, 'subtraction', return_value=5.0)
@@ -486,6 +550,47 @@ def test_calculation_repr_representation_division():
     expected_repr = f"{DivideCalculation.__name__}(a={a}, b={b})"
     assert calc_repr == expected_repr
 
+# ADDED: String representation test for PowerCalculation
+@patch.object(Operation, 'power', return_value=8.0)
+def test_calculation_str_representation_power(mock_power):
+    """
+    Test the __str__ method of PowerCalculation.
+
+    This test verifies that the string representation of a PowerCalculation instance
+    is formatted correctly, displaying the class name, operation, operands, and result.
+    """
+    # Arrange
+    a = 2.0
+    b = 3.0
+    power_calc = PowerCalculation(a, b)
+
+    # Act
+    calc_str = str(power_calc)
+
+    # Assert
+    # Expected string should reflect the operation name derived from the class name ('Power')
+    expected_str = f"{power_calc.__class__.__name__}: {a} Power {b} = 8.0"
+    assert calc_str == expected_str
+#ADDED: Repr representation test for PowerCalculation
+def test_calculation_repr_representation_power():
+    """
+    Test the __repr__ method of PowerCalculation.
+
+    This test ensures that the repr representation of a PowerCalculation instance
+    accurately reflects the class name and the operands.
+    """
+    # Arrange
+    a = 2.0
+    b = 3.0
+    power_calc = PowerCalculation(a, b)
+
+    # Act
+    calc_repr = repr(power_calc)
+
+    # Assert
+    # The __repr__ should display the class name and the operands in a clear format
+    expected_repr = f"{PowerCalculation.__name__}(a={a}, b={b})"
+    assert calc_repr == expected_repr
 
 # -----------------------------------------------------------------------------------
 # Parameterized Tests for Execute Method
@@ -496,13 +601,17 @@ def test_calculation_repr_representation_division():
     ('subtract', 10.0, 5.0, 5.0),
     ('multiply', 10.0, 5.0, 50.0),
     ('divide', 10.0, 5.0, 2.0),
+    # ADDED: Power calculation parameterized test
+    ('power', 2.0, 3.0, 8.0),
 ])
 @patch.object(Operation, 'addition')
 @patch.object(Operation, 'subtraction')
 @patch.object(Operation, 'multiplication')
 @patch.object(Operation, 'division')
+@patch.object(Operation, 'power')  # ADDED: Power operation mock
+
 def test_calculation_execute_parameterized(
-    mock_division, mock_multiplication, mock_subtraction, mock_addition,
+    mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
     calc_type, a, b, expected_result
 ):
     """
@@ -511,6 +620,7 @@ def test_calculation_execute_parameterized(
     This test runs multiple scenarios where different calculation types are executed
     with specific operands, verifying that the correct result is returned.
     """
+    
     # Arrange: Set the appropriate mock based on calculation type
     if calc_type == 'add':
         mock_addition.return_value = expected_result
@@ -520,6 +630,8 @@ def test_calculation_execute_parameterized(
         mock_multiplication.return_value = expected_result
     elif calc_type == 'divide':
         mock_division.return_value = expected_result
+    elif calc_type == 'power':  # ADDED: Power calculation mock setup
+        mock_power.return_value = expected_result
 
     # Act: Create calculation instance and execute
     calc = CalculationFactory.create_calculation(calc_type, a, b)
@@ -534,6 +646,8 @@ def test_calculation_execute_parameterized(
         mock_multiplication.assert_called_once_with(a, b)
     elif calc_type == 'divide':
         mock_division.assert_called_once_with(a, b)
+    elif calc_type == 'power':  # ADDED: Power calculation assertion
+        mock_power.assert_called_once_with(a, b)
 
     assert result == expected_result
 
@@ -547,15 +661,19 @@ def test_calculation_execute_parameterized(
     ('subtract', 10.0, 5.0, "SubtractCalculation: 10.0 Subtract 5.0 = 5.0"),
     ('multiply', 10.0, 5.0, "MultiplyCalculation: 10.0 Multiply 5.0 = 50.0"),
     ('divide', 10.0, 5.0, "DivideCalculation: 10.0 Divide 5.0 = 2.0"),
+     # ADDED: Power calculation string representation test
+    ('power', 2.0, 3.0, "PowerCalculation: 2.0 Power 3.0 = 8.0"),
 ])
 @patch.object(Operation, 'addition', return_value=15.0)
 @patch.object(Operation, 'subtraction', return_value=5.0)
 @patch.object(Operation, 'multiplication', return_value=50.0)
 @patch.object(Operation, 'division', return_value=2.0)
+@patch.object(Operation, 'power', return_value=8.0)  # ADDED: Power operation mock
 def test_calculation_str_parameterized(
-    mock_division, mock_multiplication, mock_subtraction, mock_addition,
+    mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
     calc_type, a, b, expected_str
 ):
+    """Parameterized test for __str__ method of Calculation subclasses."""
     """
     Parameterized test for __str__ method of Calculation subclasses.
 
@@ -570,3 +688,5 @@ def test_calculation_str_parameterized(
 
     # Assert: Verify the string representation matches the expected format
     assert calc_str == expected_str
+    
+  
