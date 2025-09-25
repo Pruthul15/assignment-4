@@ -41,6 +41,7 @@ Usage:
         multiply  : Multiplies two numbers.
         divide    : Divides the first number by the second.
         power     : Raises the first number to the power of the second.
+        modulus   : Finds the remainder when the first number is divided by the second.
 
 Special Commands:
     help      : Display this help message.
@@ -53,6 +54,7 @@ Examples:
     multiply 7 8
     divide 20 4
     power 2 3
+    modulus 10 3
 """
     # Remove leading/trailing whitespace for comparison
     assert captured.out.strip() == expected_output.strip()
@@ -102,8 +104,7 @@ def test_display_history_with_entries(capsys):
 1. AddCalculation: 10.0 Add 5.0 = 15.0
 2. SubtractCalculation: 20.0 Subtract 3.0 = 17.0
 3. MultiplyCalculation: 7.0 Multiply 8.0 = 56.0
-4. DivideCalculation: 20.0 Divide 4.0 = 5.0
-"""
+4. DivideCalculation: 20.0 Divide 4.0 = 5.0"""
     assert captured.out.strip() == expected_output.strip()
 
 def test_calculator_exit(monkeypatch, capsys):
@@ -278,6 +279,72 @@ def test_calculator_division_by_zero(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert "Cannot divide by zero." in captured.out
 
+# ADDED: Test calculator power operation
+def test_calculator_power(monkeypatch, capsys):
+    """
+    Test the calculator's power operation.
+
+    AAA Pattern:
+    - Arrange: Prepare the input 'power 2 3' followed by 'exit'.
+    - Act: Call the calculator function.
+    - Assert: Verify that the correct result is displayed.
+    """
+    # Arrange
+    user_input = 'power 2 3\nexit\n'
+    monkeypatch.setattr('sys.stdin', StringIO(user_input))
+
+    # Act
+    with pytest.raises(SystemExit):
+        calculator()
+
+    # Assert
+    captured = capsys.readouterr()
+    assert "Result: PowerCalculation: 2.0 Power 3.0 = 8.0" in captured.out
+
+# ADDED: Test calculator modulus operation
+def test_calculator_modulus(monkeypatch, capsys):
+    """
+    Test the calculator's modulus operation.
+
+    AAA Pattern:
+    - Arrange: Prepare the input 'modulus 10 3' followed by 'exit'.
+    - Act: Call the calculator function.
+    - Assert: Verify that the correct result is displayed.
+    """
+    # Arrange
+    user_input = 'modulus 10 3\nexit\n'
+    monkeypatch.setattr('sys.stdin', StringIO(user_input))
+
+    # Act
+    with pytest.raises(SystemExit):
+        calculator()
+
+    # Assert
+    captured = capsys.readouterr()
+    assert "Result: ModulusCalculation: 10.0 Modulus 3.0 = 1.0" in captured.out
+
+# ADDED: Test calculator modulus by zero
+def test_calculator_modulus_by_zero(monkeypatch, capsys):
+    """
+    Test the calculator's handling of modulus by zero.
+
+    AAA Pattern:
+    - Arrange: Prepare the input 'modulus 10 0' followed by 'exit'.
+    - Act: Call the calculator function.
+    - Assert: Verify that a zero division error message is displayed.
+    """
+    # Arrange
+    user_input = 'modulus 10 0\nexit\n'
+    monkeypatch.setattr('sys.stdin', StringIO(user_input))
+
+    # Act
+    with pytest.raises(SystemExit):
+        calculator()
+
+    # Assert
+    captured = capsys.readouterr()
+    assert "Cannot divide by zero." in captured.out
+
 def test_calculator_history(monkeypatch, capsys):
     """
     Test the calculator's ability to display calculation history.
@@ -328,10 +395,6 @@ def test_calculator_invalid_number_input(monkeypatch, capsys):
            "could not convert string to float: 'ten'" in captured.out or \
            "Invalid input. Please follow the format: <operation> <num1> <num2>" in captured.out
 
-# test_calculator.py
-
-# ... [other imports and tests] ...
-
 def test_calculator_unsupported_operation(monkeypatch, capsys):
     """
     Test the calculator's handling of an unsupported operation.
@@ -342,7 +405,7 @@ def test_calculator_unsupported_operation(monkeypatch, capsys):
     - Assert: Verify that the appropriate error message is displayed.
     """
     # Arrange
-    user_input = 'modulus 2 3\nexit\n'  # Changed 'power' to 'modulus'
+    user_input = 'logarithm 2 3\nexit\n'  # Using an unsupported operation
     monkeypatch.setattr('sys.stdin', StringIO(user_input))
 
     # Act
@@ -351,7 +414,7 @@ def test_calculator_unsupported_operation(monkeypatch, capsys):
 
     # Assert
     captured = capsys.readouterr()
-    assert "Unsupported calculation type: 'modulus'." in captured.out
+    assert "Unsupported calculation type: 'logarithm'." in captured.out
     assert "Type 'help' to see the list of supported operations." in captured.out
 
 
