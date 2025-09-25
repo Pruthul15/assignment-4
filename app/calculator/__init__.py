@@ -34,6 +34,7 @@ Usage:
         multiply  : Multiplies two numbers.
         divide    : Divides the first number by the second.
         power     : Raises the first number to the power of the second.
+        modulus   : Finds the remainder when the first number is divided by the second.
 
 Special Commands:
     help      : Display this help message.
@@ -46,6 +47,7 @@ Examples:
     multiply 7 8
     divide 20 4
     power 2 3
+    modulus 10 3
     """
     print(help_message)
 
