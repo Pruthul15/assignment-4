@@ -412,6 +412,134 @@ def test_power_with_fractional_exponent():
     assert result == expected_result, f"Expected {a} ** {b} to be {expected_result}, got {result}"
 
 
+# ADDED: Test Modulus Method
+# -----------------------------------------------------------------------------------
+
+def test_modulus_positive():
+    """
+    Test the modulus method with two positive numbers.
+    
+    This test verifies that finding the remainder of two positive numbers returns the correct result.
+    """
+    # Arrange
+    a = 10.0
+    b = 3.0
+    expected_result = 1.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
+
+def test_modulus_negative_numbers():
+    """
+    Test the modulus method with two negative numbers.
+    
+    This test verifies that finding the remainder of two negative numbers returns the correct result.
+    """
+    # Arrange
+    a = -10.0
+    b = -3.0
+    expected_result = -1.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
+
+def test_modulus_positive_negative():
+    """
+    Test the modulus method with one positive and one negative number.
+    
+    This test verifies that finding the remainder with mixed signs returns the correct result.
+    """
+    # Arrange
+    a = 10.0
+    b = -3.0
+    expected_result = -2.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
+
+def test_modulus_with_zero_divisor():
+    """
+    Test the modulus method with zero as the divisor.
+    
+    This test verifies that performing modulus with zero raises a ValueError.
+    """
+    # Arrange
+    a = 10.0
+    b = 0.0
+
+    # Act & Assert
+    with pytest.raises(ValueError) as exc_info:
+        Operation.modulus(a, b)
+    
+    # Verify that the exception message is as expected
+    assert str(exc_info.value) == "Modulus by zero is not allowed."
+
+
+def test_modulus_with_zero_numerator():
+    """
+    Test the modulus method with zero as the numerator.
+    
+    This test verifies that finding the remainder when zero is divided by a non-zero number returns zero.
+    """
+    # Arrange
+    a = 0.0
+    b = 5.0
+    expected_result = 0.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
+
+def test_modulus_exact_division():
+    """
+    Test the modulus method when the first number is exactly divisible by the second.
+    
+    This test verifies that the remainder is zero when there's no remainder.
+    """
+    # Arrange
+    a = 15.0
+    b = 5.0
+    expected_result = 0.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
+
+def test_modulus_fractional_numbers():
+    """
+    Test the modulus method with fractional numbers.
+    
+    This test verifies that modulus works correctly with decimal numbers.
+    """
+    # Arrange
+    a = 7.5
+    b = 2.5
+    expected_result = 0.0
+
+    # Act
+    result = Operation.modulus(a, b)
+
+    # Assert
+    assert result == expected_result, f"Expected {a} % {b} to be {expected_result}, got {result}"
+
 
 # -----------------------------------------------------------------------------------
 # Test Invalid Input Types (Negative Testing)
@@ -424,6 +552,8 @@ def test_power_with_fractional_exponent():
     (Operation.division, 10.0, '5', TypeError),
     # ADDED: Power operation invalid input test
     (Operation.power, '2', 3.0, TypeError),
+    # ADDED: Modulus operation invalid input test
+    (Operation.modulus, '10', 3.0, TypeError),
 ])
 def test_operations_invalid_input_types(calc_method, a, b, expected_exception):
     """
