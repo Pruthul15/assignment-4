@@ -261,3 +261,25 @@ class PowerCalculation(Calculation):
     def execute(self) -> float:
         # Calls the power method from the Operation module to perform the exponentiation.
         return Operation.power(self.a, self.b)
+
+# ADDED: ModulusCalculation class for modulus functionality
+@CalculationFactory.register_calculation('modulus')
+class ModulusCalculation(Calculation):
+    """
+    ModulusCalculation represents a modulus operation between two numbers.
+    
+    **Mathematical Operation**: This class performs modulus calculation, finding 
+    the remainder when 'a' is divided by 'b'. The modulus operation is fundamental 
+    in many programming applications including determining even/odd numbers, 
+    cycling through arrays, and various mathematical algorithms.
+    
+    **Special Case - Modulus by Zero**: Similar to division, modulus requires 
+    error handling to prevent modulus by zero, which would cause an error.
+    """
+
+    def execute(self) -> float:
+        # Before performing modulus, check if `b` is zero to avoid ZeroDivisionError.
+        if self.b == 0:
+            raise ZeroDivisionError("Cannot perform modulus by zero.")
+        # Calls the modulus method from the Operation module to perform the modulus.
+        return Operation.modulus(self.a, self.b)
