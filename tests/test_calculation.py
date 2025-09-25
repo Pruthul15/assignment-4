@@ -20,10 +20,11 @@ from app.calculation import (
     MultiplyCalculation,
     DivideCalculation,
     PowerCalculation,  # ADDED: PowerCalculation import for power operation functionality
+    ModulusCalculation,  # ADDED: ModulusCalculation import for modulus operation functionality
     Calculation
 )
 # Ensure all calculation classes are loaded and registered
-from app.calculation import PowerCalculation  # This forces the decorator to execute
+from app.calculation import PowerCalculation, ModulusCalculation  # This forces the decorator to execute
 
 # -----------------------------------------------------------------------------------
 # Test Concrete Calculation Classes
@@ -273,6 +274,70 @@ def test_power_calculation_execute_negative(mock_power):
     # Verify that the exception message is as expected
     assert str(exc_info.value) == "Power error"
 
+# ADDED: ModulusCalculation tests for modulus functionality
+@patch.object(Operation, 'modulus')
+def test_modulus_calculation_execute_positive(mock_modulus):
+    """
+    Test the execute method of ModulusCalculation for a positive scenario.
+
+    This test verifies that the ModulusCalculation class correctly calls the modulus
+    method of the Operation class with the provided operands and returns the expected result.
+    """
+    # Arrange
+    a = 10.0
+    b = 3.0
+    expected_result = 1.0
+    mock_modulus.return_value = expected_result
+    modulus_calc = ModulusCalculation(a, b)
+
+    # Act
+    result = modulus_calc.execute()
+
+    # Assert
+    mock_modulus.assert_called_once_with(a, b)
+    assert result == expected_result
+
+
+@patch.object(Operation, 'modulus')
+def test_modulus_calculation_execute_negative(mock_modulus):
+    """
+    Test the execute method of ModulusCalculation for a negative scenario.
+
+    This test ensures that if the Operation.modulus method raises an exception,
+    the ModulusCalculation.execute method propagates it correctly.
+    """
+    # Arrange
+    a = 10.0
+    b = 3.0
+    mock_modulus.side_effect = Exception("Modulus error")
+    modulus_calc = ModulusCalculation(a, b)
+
+    # Act & Assert
+    with pytest.raises(Exception) as exc_info:
+        modulus_calc.execute()
+
+    # Verify that the exception message is as expected
+    assert str(exc_info.value) == "Modulus error"
+
+
+def test_modulus_calculation_execute_modulus_by_zero():
+    """
+    Test that ModulusCalculation.execute raises ZeroDivisionError when modulus by zero.
+
+    This test verifies that attempting to perform modulus by zero using ModulusCalculation
+    correctly raises a ZeroDivisionError with an appropriate error message.
+    """
+    # Arrange
+    a = 10.0
+    b = 0.0
+    modulus_calc = ModulusCalculation(a, b)
+
+    # Act & Assert
+    with pytest.raises(ZeroDivisionError) as exc_info:
+        modulus_calc.execute()
+
+    # Verify the exception message is as expected
+    assert str(exc_info.value) == "Cannot perform modulus by zero."
 
 
 # -----------------------------------------------------------------------------------
@@ -374,6 +439,22 @@ def test_factory_creates_power_calculation():
     assert calc.a == a
     assert calc.b == b
 
+# ADDED: Factory test for ModulusCalculation creation
+def test_factory_creates_modulus_calculation():
+    """Test that the CalculationFactory creates a ModulusCalculation instance."""
+    
+    # Arrange
+    a = 10.0
+    b = 3.0
+    
+    # Act
+    calc = CalculationFactory.create_calculation('modulus', a, b)
+    
+    # Assert
+    assert isinstance(calc, ModulusCalculation)
+    assert calc.a == a
+    assert calc.b == b
+
 def test_factory_create_unsupported_calculation():
     """
     Test that CalculationFactory raises ValueError when an unsupported calculation type is requested.
@@ -384,7 +465,7 @@ def test_factory_create_unsupported_calculation():
     # Arrange
     a = 10.0
     b = 5.0
-    unsupported_type = 'modulus'  # An unsupported calculation type
+    unsupported_type = 'logarithm'  # An unsupported calculation type
 
     # Act & Assert
     with pytest.raises(ValueError) as exc_info:
@@ -571,6 +652,29 @@ def test_calculation_str_representation_power(mock_power):
     # Expected string should reflect the operation name derived from the class name ('Power')
     expected_str = f"{power_calc.__class__.__name__}: {a} Power {b} = 8.0"
     assert calc_str == expected_str
+
+# ADDED: String representation test for ModulusCalculation
+@patch.object(Operation, 'modulus', return_value=1.0)
+def test_calculation_str_representation_modulus(mock_modulus):
+    """
+    Test the __str__ method of ModulusCalculation.
+
+    This test verifies that the string representation of a ModulusCalculation instance
+    is formatted correctly, displaying the class name, operation, operands, and result.
+    """
+    # Arrange
+    a = 10.0
+    b = 3.0
+    modulus_calc = ModulusCalculation(a, b)
+
+    # Act
+    calc_str = str(modulus_calc)
+
+    # Assert
+    # Expected string should reflect the operation name derived from the class name ('Modulus')
+    expected_str = f"{modulus_calc.__class__.__name__}: {a} Modulus {b} = 1.0"
+    assert calc_str == expected_str
+
 #ADDED: Repr representation test for PowerCalculation
 def test_calculation_repr_representation_power():
     """
@@ -592,6 +696,27 @@ def test_calculation_repr_representation_power():
     expected_repr = f"{PowerCalculation.__name__}(a={a}, b={b})"
     assert calc_repr == expected_repr
 
+# ADDED: Repr representation test for ModulusCalculation
+def test_calculation_repr_representation_modulus():
+    """
+    Test the __repr__ method of ModulusCalculation.
+
+    This test ensures that the repr representation of a ModulusCalculation instance
+    accurately reflects the class name and the operands.
+    """
+    # Arrange
+    a = 10.0
+    b = 3.0
+    modulus_calc = ModulusCalculation(a, b)
+
+    # Act
+    calc_repr = repr(modulus_calc)
+
+    # Assert
+    # The __repr__ should display the class name and the operands in a clear format
+    expected_repr = f"{ModulusCalculation.__name__}(a={a}, b={b})"
+    assert calc_repr == expected_repr
+
 # -----------------------------------------------------------------------------------
 # Parameterized Tests for Execute Method
 # -----------------------------------------------------------------------------------
@@ -603,15 +728,18 @@ def test_calculation_repr_representation_power():
     ('divide', 10.0, 5.0, 2.0),
     # ADDED: Power calculation parameterized test
     ('power', 2.0, 3.0, 8.0),
+    # ADDED: Modulus calculation parameterized test
+    ('modulus', 10.0, 3.0, 1.0),
 ])
 @patch.object(Operation, 'addition')
 @patch.object(Operation, 'subtraction')
 @patch.object(Operation, 'multiplication')
 @patch.object(Operation, 'division')
 @patch.object(Operation, 'power')  # ADDED: Power operation mock
+@patch.object(Operation, 'modulus')  # ADDED: Modulus operation mock
 
 def test_calculation_execute_parameterized(
-    mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
+    mock_modulus, mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
     calc_type, a, b, expected_result
 ):
     """
@@ -632,6 +760,8 @@ def test_calculation_execute_parameterized(
         mock_division.return_value = expected_result
     elif calc_type == 'power':  # ADDED: Power calculation mock setup
         mock_power.return_value = expected_result
+    elif calc_type == 'modulus':  # ADDED: Modulus calculation mock setup
+        mock_modulus.return_value = expected_result
 
     # Act: Create calculation instance and execute
     calc = CalculationFactory.create_calculation(calc_type, a, b)
@@ -648,6 +778,8 @@ def test_calculation_execute_parameterized(
         mock_division.assert_called_once_with(a, b)
     elif calc_type == 'power':  # ADDED: Power calculation assertion
         mock_power.assert_called_once_with(a, b)
+    elif calc_type == 'modulus':  # ADDED: Modulus calculation assertion
+        mock_modulus.assert_called_once_with(a, b)
 
     assert result == expected_result
 
@@ -663,14 +795,17 @@ def test_calculation_execute_parameterized(
     ('divide', 10.0, 5.0, "DivideCalculation: 10.0 Divide 5.0 = 2.0"),
      # ADDED: Power calculation string representation test
     ('power', 2.0, 3.0, "PowerCalculation: 2.0 Power 3.0 = 8.0"),
+    # ADDED: Modulus calculation string representation test
+    ('modulus', 10.0, 3.0, "ModulusCalculation: 10.0 Modulus 3.0 = 1.0"),
 ])
 @patch.object(Operation, 'addition', return_value=15.0)
 @patch.object(Operation, 'subtraction', return_value=5.0)
 @patch.object(Operation, 'multiplication', return_value=50.0)
 @patch.object(Operation, 'division', return_value=2.0)
 @patch.object(Operation, 'power', return_value=8.0)  # ADDED: Power operation mock
+@patch.object(Operation, 'modulus', return_value=1.0)  # ADDED: Modulus operation mock
 def test_calculation_str_parameterized(
-    mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
+    mock_modulus, mock_power, mock_division, mock_multiplication, mock_subtraction, mock_addition,
     calc_type, a, b, expected_str
 ):
     """Parameterized test for __str__ method of Calculation subclasses."""
@@ -688,5 +823,3 @@ def test_calculation_str_parameterized(
 
     # Assert: Verify the string representation matches the expected format
     assert calc_str == expected_str
-    
-  
