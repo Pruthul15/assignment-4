@@ -1,4 +1,3 @@
-
 # operations.py
 
 class Operation:
@@ -21,8 +20,8 @@ class Operation:
     - **Statelessness**: These methods do not rely on any instance-specific data; they only 
       depend on input parameters. Static methods are ideal for utility functions that 
       perform independent operations.
-    - **Ease of Access**: Because we don’t need to create an instance of Operation to call 
-      these methods, it’s easy to use them across different parts of the program.
+    - **Ease of Access**: Because we don't need to create an instance of Operation to call 
+      these methods, it's easy to use them across different parts of the program.
     """
 
     @staticmethod
@@ -156,3 +155,39 @@ class Operation:
           for cases where we need to multiply a number by itself multiple times.
         """
         return a ** b  # Raises `a` to the power of `b` and returns the result.
+
+    # ADDED: Modulus operation for remainder functionality
+    @staticmethod
+    def modulus(a: float, b: float) -> float:
+        """
+        Calculates the remainder when the first floating-point number is divided by the second.
+
+        **Parameters:**
+        - `a (float)`: The dividend.
+        - `b (float)`: The divisor.
+        
+        **Returns:**
+        - `float`: The remainder of `a` divided by `b`.
+
+        **Raises:**
+        - `ValueError`: If the divisor `b` is zero, as modulus by zero is undefined.
+
+        **Example:**
+        >>> Operation.modulus(10.0, 3.0)
+        1.0
+        >>> Operation.modulus(15.0, 4.0)
+        3.0
+
+        **Mathematical Operation:**
+        - This method performs modulus calculation using Python's % operator.
+        - The modulus operation is fundamental in programming for cyclic operations,
+          determining divisibility, and many algorithmic applications.
+        
+        **Error Handling:**
+        - Like division, modulus requires error handling to prevent modulus by zero.
+        - We check if `b` is zero and raise a `ValueError` with a descriptive message.
+        """
+        if b == 0:
+            # Checks if the divisor is zero to prevent undefined modulus operation.
+            raise ValueError("Modulus by zero is not allowed.")
+        return a % b  # Calculates `a` modulo `b` and returns the remainder.
