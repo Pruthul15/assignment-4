@@ -1,3 +1,11 @@
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Assignment 4: Calculator REPL Interface Tests
+Enhanced tests to verify modulus operation integration
+Tests user input validation and error message handling
+"""
+
 # test_calculator.py
 
 """
