@@ -1,3 +1,10 @@
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Mathematical Operations - Assignment 4
+Added modulus and power operations to existing calculator framework
+"""
+
 # operations.py
 
 class Operation:
