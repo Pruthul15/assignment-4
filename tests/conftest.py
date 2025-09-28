@@ -1,3 +1,12 @@
+
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Assignment 4: Professional Calculator Command-Line Application
+IS 601 - Programming with Python
+"""
+
+
 # conftest.py
 
 import pytest
