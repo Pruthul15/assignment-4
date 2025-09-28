@@ -1,3 +1,12 @@
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Assignment 4: Mathematical Operations Unit Tests
+Implemented parameterized tests for modulus and power operations
+Covers positive/negative numbers, decimals, and error scenarios
+"""
+
+
 # tests/test_operations.py
 
 """
