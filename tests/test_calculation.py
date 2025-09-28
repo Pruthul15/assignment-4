@@ -1,3 +1,12 @@
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Assignment 4: Calculation Classes Unit Tests
+Added comprehensive tests for ModulusCalculation and PowerCalculation classes
+Tests factory registration, error handling, and edge cases
+"""
+
+
 # tests/test_calculations.py
 
 """
