@@ -8,28 +8,22 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.x
+      uses: actions/setup-python@v2
       with:
-        python-version: '3.12'
-
+        python-version: '3.x'
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; else pip install pytest pytest-cov coverage; fi
-
-    # pytest.ini in your repo already has coverage addopts, so a plain pytest is fine.
-    - name: Run tests
+        pip install pytest pytest-cov
+    - name: Run tests with coverage
       run: |
-        pytest
-
-    # Enforce 100% coverage (fail build if below 100)
-    - name: Enforce coverage threshold
+        pytest --cov=app tests/
+    - name: Check coverage
       run: |
         coverage report --fail-under=100
