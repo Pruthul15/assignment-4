@@ -172,7 +172,7 @@ pytest -v
 
 ### Test Results
 - **98 Total Tests**: Complete unit and parameterized testing
-- **100% Coverage**: All 149 statements and 22 branches covered
+- **100% Coverage**: All 150 statements and 22 branches covered
 - **Edge Cases**: Division by zero, invalid inputs, error scenarios
 - **Parameterized Tests**: Multiple scenarios tested efficiently
 
@@ -253,10 +253,10 @@ Name                          Stmts   Miss Branch BrPart  Cover
 ------------------------------------------------------------- 
 app/__init__.py                   0      0      0      0   100%
 app/calculation/__init__.py      61      0      8      0   100%
-app/calculator/__init__.py       65      0     10      0   100%
+app/calculator/__init__.py       66      0     10      0   100%
 app/operation/__init__.py        23      0      4      0   100%
 -------------------------------------------------------------
-TOTAL                           149      0     22      0   100%
+TOTAL                           150      0     22      0   100%
 ```
 
 ## 🛠️ Dependencies
