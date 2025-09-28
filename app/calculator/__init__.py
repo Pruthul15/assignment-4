@@ -1,4 +1,13 @@
 """
+Author: Pruthul Patel
+Date: September 28, 2025
+Assignment 4: Calculator REPL Interface
+Enhanced REPL with modulus operation support
+Documented calculator interface improvements
+"""
+
+
+"""
 This module provides a professional-grade calculator that can add, subtract,
 multiply, and divide numbers based on user input. It leverages the Calculation
 classes for operations and includes additional features like help commands and
