@@ -1,3 +1,11 @@
+"""
+Author: Pruthul Patel
+Date: September 28, 2025
+Calculation Classes and Factory Pattern - Assignment 4
+Implemented ModulusCalculation and PowerCalculation with factory registration
+"""
+
+
 # calculator_calculations.py
 
 # -----------------------------------------------------------------------------------
